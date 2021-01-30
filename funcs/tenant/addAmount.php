@@ -47,7 +47,7 @@ function addAmount()
 			</button>
 			<div class="collapse navbar-collapse" id="navbarCollapse">
 				<ul class="navbar-nav mr-auto">
-					<li class="nav-item active"><a class="nav-link" href="/rent">Home <span
+					<li class="nav-item active"><a class="nav-link" href="/">Home <span
 							class="sr-only">(current)</span></a></li>
 				</ul>
 				<!-- <form class="form-inline mt-2 mt-md-0">

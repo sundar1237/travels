@@ -37,7 +37,7 @@ if (! isset($_SESSION['user'])) {
         }
     
     
-    header('Location: /rent/rents.php');
+    header('Location: rents.php');
 }else if (isset($_GET['action']) && "viewPending" == $_GET['action']){
     $content="";
     $bill_month=$_GET['id'];

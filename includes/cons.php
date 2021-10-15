@@ -5,6 +5,11 @@ error_reporting(E_ALL);
 session_start();
 include 'funcs/db.php';
 
+define("NO_OF_AIRLINES_PER_PAGE", "200");
+define("NO_OF_AIRPORTS_PER_PAGE", "500");
+define("NO_OF_INV_PER_PAGE", "10");
+define("NO_OF_CUSTOMER_PER_PAGE", "100");
+
 define("MAIN_TITLE", "Saran Solutions");
 define("MAIN_LOGO_PATH", "images/logo.png");
 #address parameters
@@ -25,8 +30,11 @@ define("SMTP_PORT", "587");
 define("MAIL_FROM_ADDRESS", "info@fimmoag.com");
 define("MAIL_TO_ADDRESS", "info@fimmoag.com");
 
+define("FOOT_MSG", 'Rathusstr, 63,CH – 4410 LIESTAL, Tel: 061 272 23 01 Fax: 061 272 23 04 Mobile: 076 570 50 03
+www.kayathri.ch info@kayathri.ch Credit Suisse IBAN: CH85 0483 5172 4580 6100 0');
 
 
+define("PDF_FOOTER_SARAN_SOLUTIONS", '<div><p style="margin-left:70%;font-size: 8pt;">Developed By <font style="font-style:italic;text-decoration: underline;">www.saransolutions.in</font></p></div>');
 
 function getMeta(){
     return '<meta charset="utf-8">
@@ -63,6 +71,9 @@ function getCssLinks(){
     return '
 <link href="css/font-awesome.min.css" rel="stylesheet">
 <link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/select2.min.css" rel="stylesheet" />
+
+
 <!--<link href="css/carousel.css" rel="stylesheet">
 <link href="css/blog.css" rel="stylesheet">-->';
 }
@@ -87,13 +98,19 @@ function getNavigationMenu(){
   <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
     <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
       <li class="nav-item active">
-        <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+        <a class="nav-link" href="index.php">Home <span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="rents.php">Monthly Rents</a>
+        <a class="nav-link" href="customers.php">Customers</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="house.php">Houses</a>
+        <a class="nav-link" href="reports.php">Reports</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="index.php?action=view_airports">Airports</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="index.php?action=view_airlines">Airlines</a>
       </li>
     </ul>    
   </div>
@@ -116,8 +133,60 @@ function getJavaScript(){
 	<script src="js/jquery.cookie.min.js"></script>
 	<script src="js/popper.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
-
+  <script src="js/select2.min.js"></script>      
 ';
 }
+
+define("PDF_HEAD_TEMPLATE","<head>
+<style>
+body {font-family: sans-serif;
+    font-size: 10pt;
+}
+    
+#custTable1 {
+    border-collapse: separate;
+    border-spacing: 0;
+    min-width: 350px;
+    border-top: 1px solid #bbb;
+}
+#custTable1 tr th,
+#custTable1 tr td {
+    border-right: 1px solid #bbb;
+    border-bottom: 1px solid #bbb;
+    padding: 5px;
+}
+#custTable1 tr th:first-child,
+#custTable1 tr td:first-child {
+    border-left: 1px solid #bbb;
+}
+#custTable1 tr th {
+    background: #eee;
+    border-top: 1px solid #bbb;
+    text-align: left;
+}
+    
+/* top-left border-radius */
+#custTable1 tr:first-child th:first-child {
+    border-top-left-radius: 6px;
+}
+    
+/* top-right border-radius */
+#custTable1 tr:first-child th:last-child {
+    border-top-right-radius: 6px;
+}
+    
+/* bottom-left border-radius */
+#custTable1 tr:last-child td:first-child {
+    border-bottom-left-radius: 6px;
+}
+    
+/* bottom-right border-radius */
+#custTable1 tr:last-child td:last-child {
+    border-bottom-right-radius: 6px;
+}
+    
+</style>
+</head>");
+
 
 ?>

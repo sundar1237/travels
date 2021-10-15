@@ -1,16 +1,27 @@
 <?php
 function getDBConnection(){
-	$db_name='ch295301_rent';
-	$db_user='ch295301_rent';
-	$db_pass='welcome2$RENT';
+    //saransol_mtp
+    $db_name='anisch_invoices';
+    $db_user='anisch_invoices';
+    $db_pass='anisch_invoices';
+    
 	$conn=mysqli_connect('localhost',$db_user, $db_pass, $db_name) or die("error occured on getConnection " . mysqli_error($conn));	
 	return $conn;
 }
 function executeSQL($sql){
 	if (!mysqli_query(getDBConnection(), $sql))
 	{
-		die($sql . ' - executeSQL Error: ' . mysqli_error());
+	    die($sql . ' - executeSQL Error: ' . mysqli_error($conn));
 	}	
+}
+
+function insertSQL($sql){
+    $conn=getDBConnection();
+    if (mysqli_query($conn, $sql)) {
+        return mysqli_insert_id($conn);
+    } else {
+        echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+    }
 }
 
 function selectSQL($sql){
@@ -31,6 +42,17 @@ function getFetchArray($sql){
 	/* close connection */
 	mysqli_close($conn);	
 	return $rows; 
+}
+
+function getCount($sql){
+    $conn=getDBConnection();
+    $result= mysqli_query($conn, $sql) or die ("Er:getCount ".mysqli_error()." sql - ".$sql);
+    $count=mysqli_num_rows($result);
+    /* free result set */
+    mysqli_free_result($result);
+    /* close connection */
+    mysqli_close($conn);
+    return $count;
 }
 
 function getSingleValue($sql){

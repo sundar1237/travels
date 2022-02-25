@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Oct 15, 2021 at 02:24 AM
--- Server version: 5.7.33-0ubuntu0.16.04.1
--- PHP Version: 7.2.34-21+ubuntu16.04.1+deb.sury.org+1
+-- Generation Time: Feb 15, 2022 at 12:40 PM
+-- Server version: 5.7.37-0ubuntu0.18.04.1
+-- PHP Version: 7.2.34-28+ubuntu20.04.1+deb.sury.org+1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -9855,9 +9855,9 @@ CREATE TABLE `customers` (
   `id` int(11) NOT NULL,
   `first_name` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `last_name` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
-  `address` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
-  `city` varchar(25) COLLATE utf8_unicode_ci NOT NULL,
-  `zip` int(11) NOT NULL,
+  `address` varchar(150) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `city` varchar(25) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `zip` int(11) DEFAULT NULL,
   `mobile` varchar(25) COLLATE utf8_unicode_ci DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -9866,12 +9866,7 @@ CREATE TABLE `customers` (
 --
 
 INSERT INTO `customers` (`id`, `first_name`, `last_name`, `address`, `city`, `zip`, `mobile`) VALUES
-(1, 'sundaravel', 'natarajan', 'Sportweg 27', 'Liebefeld', 3097, '0795680636'),
-(2, 'Harshan', 'Sundaravel', 'Sportweg 27', 'Liebefeld', 3097, '0795680636'),
-(3, 'Ramachandra', 'Ramaiya', 'Keelaputhur mainroad 25', 'Trichy', 3097, '0328012380'),
-(4, 'Rishvanth', 'Sundaravel', 'Sportweg 27', 'Liebefeld', 3098, '+41795680637'),
-(5, 'Gayathri', 'Sethupathi', '12, Waldeggstrasse', 'Liebefeld', 3097, '09877767'),
-(6, 'Bavasaiya', 'Bangaram', 'vivekandan street', 'Bengaluru', 8023480, '034023874');
+(11, 'KANISSA', 'SIVAPATHASUNDARAM', 'Sportweg 27', NULL, NULL, '229383839');
 
 -- --------------------------------------------------------
 
@@ -9906,9 +9901,7 @@ CREATE TABLE `orders` (
 --
 
 INSERT INTO `orders` (`id`, `reference`, `bdate`, `airlines`, `origin`, `destination`, `baggage`, `cancel_charge`, `customer_id`, `ticket_status`, `total_iata_price`, `total_price`, `gain`, `payment_status`, `content`, `trip_type`, `no_of_passengers`, `total_paid`, `total_balance`) VALUES
-(4, 'SKIP5S', '2020-02-06', 'Qatar Airways', 'ZRH', 'CMB', 30, 300.00, 3, 'Reserved', 750.00, 770.00, 40.00, 'Unpaid', 'RP/BSLC22179/BSLC22179            LK/SU   6FEB20/1454Z   SKIP5S\r\n  1.SINNATHURAI/RAJEEV MR\r\n  2  QR 096 W 01MAR 7*ZRHDOH HK1  1605 2355  01MAR  E  QR/SKIP5S\r\n  3  QR 664 W 02MAR 1*DOHCMB HK1  0200 0920  02MAR  E  QR/SKIP5S\r\n  4  QR 663 W 15MAR 7*CMBDOH HK1  0425 0710  15MAR  E  QR/SKIP5S\r\n  5  QR 095 W 15MAR 7*DOHZRH HK1  0800 1230  15MAR  E  QR/SKIP5S\r\n  6 AP BSL +41 61 272 2301 - KAYATHRI TRAVELS L. KANAGARATNAM -\r\n       A\r\n  7 TK TL06FEB/BSLC22179', 'rountTrip', 1, 770.00, 0.00),
-(5, 'L83E5V', '2020-02-18', 'Qatar Airways', 'CMB', 'ZRH', 30, 300.00, 1, 'Confirmed', 750.00, 770.00, 40.00, 'Unpaid', 'RP/BSLC22179/BSLC22179            AA/RC  18FEB20/0940Z   L83E5V\r\n  1.KANAGASABAI/KALIYUGAN MR\r\n  2  QR 096 W 25JAN 6 ZRHDOH         FLWN\r\n  3  QR 664 W 26JAN 7 DOHCMB         FLWN\r\n  4  QR 663 T 25FEB 2*CMBDOH HK1  0425 0710  25FEB  E  QR/L83E5V\r\n  5  QR 095 T 25FEB 2*DOHZRH HK1  0800 1230  25FEB  E  QR/L83E5V\r\n  6 AP BSL +41 61 272 2301 - KAYATHRI TRAVELS L. KANAGARATNAM -\r\n       A\r\n  7 TK OK10JAN/BSLC22129//ETQR\r\n  8 TK PAX OK18FEB/BSLC22129//ETQR/S4-5\r\n  9 SSR RQST QR KK1 ZRHDOH/23JN,P1/FLWN/S2   SEE RTSTR\r\n 10 SSR RQST QR KK1 DOHCMB/15FN,P1/FLWN/S3   SEE RTSTR\r\n 11 SSR OTHS 1A - PLS PROVIDE FULL SECURE FLIGHT DATA /\r\n 12 SSR OTHS 1A APIS IN DOCA/DOCO/DOCS AND ACTION URGENTLY.\r\n 13 SSR OTHS 1A FOR USA FLTS QR RESERVES THE RIGHT TO CANCEL\r\n 14 SSR DOCS QR HK1 P/CHE/X1279835/CHE/01NOV84/M/23MAR25/KANAGAS\r\n       ABAI/KALIYUGAN/S2\r\n 15 SSR DOCS QR HK1 P/CHE/X1279835/CHE/01NOV84/M/23MAR25/KANAGAS\r\n       ABAI/KALIYUGAN/S3\r\n 16 SSR DOCS QR HK1 P/CHE/X1279835/CHE/01NOV84/M/23MAR25/KANAGAS\r\n \r\n 28 FA PAX 157-9484356003/ETQR/18FEB20/BSLC22129/81211885/S4-5\r\n 29 FB PAX 0000000000 TTP OK ETICKET/S2-3\r\n 30 FB PAX 0000000000 TTP/T3 OK ETICKET/S4-5', 'oneway', 1, 770.00, 0.00),
-(7, 'MSHJ9C', '2020-03-03', 'Lufthansa', 'BSL', 'YYZ', 30, 300.00, 6, 'Reserved', 1620.00, 1660.00, 80.00, 'Unpaid', 'RP/BSLC22179/BSLC22179            WS/RC   3MAR20/1718Z   MSHJ9C\r\n  1.SUBRAMANIAM/THARMARAJAH MR\r\n  2.THARMARAJAH/PADMAJANADEVI MRS\r\n  3  LH1203 L 17MAR 2*BSLFRA HK2  1045 1145  17MAR  E  LH/MSHJ9C\r\n  4  LH 470 L 17MAR 2*FRAYYZ HK2  1325 1705  17MAR  E  LH/MSHJ9C\r\n  5  LH 471 L 24MAR 2*YYZFRA HK2  1910 0800  25MAR  E  LH/MSHJ9C\r\n  6  LH1202 L 25MAR 3*FRABSL HK2  0910 1000  25MAR  E  LH/MSHJ9C\r\n     OPERATED BY LUFTHANSA CITYLINE\r\n  7 AP BSL +41 61 272 2301 - KAYATHRI TRAVELS L. KANAGARATNAM -\r\n       A\r\n  8 TK TL03MAR/BSLC22179\r\n  9 SSR OTHS 1A PLS ADV TKT NBR BY 06MAR20/1716Z OR LH OPTG/MKTG\r\n       FLTS WILL BE CANX / APPLIC FARE RULE APPLIES IF IT\r\n       DEMANDS\r\n 10 SSR OTHS 1A /// EARLIER TKTG', 'rountTrip', 2, 1660.00, 0.00);
+(13, 'TXETXQ', '2021-10-21', 'Lufthansa', 'BSL', 'CMB', 30, 300.00, 11, 'Confirmed', 2300.00, 2360.00, 120.00, 'Unpaid', 'TXETXQ\r\n\r\n     1.1SIVAPATHASUNDARAM/KANISSA MRS  2.1MAYURAN/SHAMJUKTA MISS\r\n\r\n     3.I/1MAYURAN/DENISHAGI MISS\r\n\r\n     1 LH1203T 31DEC 5 BSLFRA HK2  1045  1145  SPM /DCLH*RUMJAN /E\r\n\r\n    OPERATED BY LUFTH CITYLINE\r\n\r\n     2 UL 554V 31DEC 5 FRACMB HK2  1515  0530   01JAN 6 SPM\r\n\r\n                                                   /DCUL*RUMJAN /E\r\n\r\n    TKT/TIME LIMIT\r\n\r\n      1.T-05JAN-IG0H*ACB\r\n\r\n    PHONES\r\n\r\n      1.ZRH031 911 03 38\r\n\r\n   PASSENGER EMAIL DATA EXISTS  *PE TO DISPLAY ALL\r\n\r\n    INVOICED\r\n\r\n    PRICE QUOTE RECORD EXISTS - SYSTEM\r\n\r\n    SECURITY INFO EXISTS *P3D OR *P4D TO DISPLAY\r\n\r\n    AA FACTS\r\n\r\n      1.SSR ADTK 1S TO UL BY 22OCT 1553 BRN TIME ZONE OTHERWISE WIL\r\n\r\n        L BE XLD\r\n\r\n      2.SSR INFT LH KK1 BSLFRA1203T02NOV/MAYURAN/DENISHAGI MISS/23A¥\r\n\r\n \r\n\r\n*T«\r\n\r\n \r\n\r\n    TKT/TIME LIMIT\r\n\r\n      1.T-21OCT-IG0H*ACB\r\n\r\n      2.TE 6033698549314-CH SIVAP/K IG0H*ACB 1931/21OCT*I\r\n\r\n      3.TE 6033698549315-CH MAYUR/S IG0H*ACB 1931/21OCT*I\r\n\r\n      4.TE 6033698549316-CH MAYUR/D IG0H*ACB 1931/21OCT*I', 'oneway', 3, 2360.00, 0.00);
 
 -- --------------------------------------------------------
 
@@ -9935,10 +9928,9 @@ CREATE TABLE `passengers` (
 --
 
 INSERT INTO `passengers` (`id`, `prefix`, `first_name`, `last_name`, `extra`, `e_ticket_number`, `price`, `ticket_charge`, `visa_charge`, `IATA_charge`, `parent_id`) VALUES
-(5, 'MR', 'SINNATHURAI', 'RAJEEV', NULL, NULL, 770.00, 20.00, NULL, 750.00, 4),
-(6, 'MR', 'KANAGASABAI', 'KALIYUGAN', NULL, '157-9484356003', 770.00, 20.00, NULL, 750.00, 5),
-(10, 'MRS', 'THARMARAJAH', 'PADMAJANADEVI', NULL, NULL, 990.00, 20.00, NULL, 970.00, 7),
-(9, 'MR', 'SUBRAMANIAM', 'THARMARAJAH', NULL, NULL, 670.00, 20.00, NULL, 650.00, 7);
+(24, 'MISS', 'DENISHAGI', 'MAYURAN', NULL, '6033698549316-CH', 600.00, 20.00, NULL, 580.00, 13),
+(22, 'MRS', 'KANISSA', 'SIVAPATHASUNDARAM', NULL, '6033698549314-CH', 770.00, 20.00, NULL, 750.00, 13),
+(23, 'MISS', 'SHAMJUKTA', 'MAYURAN', NULL, '6033698549315-CH', 990.00, 20.00, NULL, 970.00, 13);
 
 -- --------------------------------------------------------
 
@@ -9960,16 +9952,8 @@ CREATE TABLE `routes` (
 --
 
 INSERT INTO `routes` (`id`, `start_date`, `origin`, `destination`, `land_date`, `parent_id`) VALUES
-(16, '2020-02-25 08:00:00', 'DOH', 'ZRH', '2020-02-25 12:30:00', 5),
-(15, '2020-02-25 04:25:00', 'CMB', 'DOH', '2020-02-25 07:10:00', 5),
-(14, '2020-03-15 08:00:00', 'DOH', 'ZRH', '2020-03-15 12:30:00', 4),
-(13, '2020-03-15 04:25:00', 'CMB', 'DOH', '2020-03-15 07:10:00', 4),
-(12, '2020-03-02 02:00:00', 'DOH', 'CMB', '2020-03-02 09:20:00', 4),
-(11, '2020-03-01 16:05:00', 'ZRH', 'DOH', '2020-03-01 23:55:00', 4),
-(24, '2020-03-25 09:10:00', 'FRA', 'BSL', '2020-03-25 10:00:00', 7),
-(23, '2020-03-24 19:10:00', 'YYZ', 'FRA', '2020-03-25 08:00:00', 7),
-(22, '2020-03-17 13:25:00', 'FRA', 'YYZ', '2020-03-17 17:05:00', 7),
-(21, '2020-03-17 10:45:00', 'BSL', 'FRA', '2020-03-17 11:45:00', 7);
+(40, '2021-12-31 15:15:00', 'FRA', 'CMB', '2022-01-01 05:30:00', 13),
+(39, '2021-12-31 10:45:00', 'BSL', 'FRA', '2021-12-31 11:45:00', 13);
 
 --
 -- Indexes for dumped tables
@@ -10043,25 +10027,25 @@ ALTER TABLE `bookies`
 -- AUTO_INCREMENT for table `customers`
 --
 ALTER TABLE `customers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `passengers`
 --
 ALTER TABLE `passengers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT for table `routes`
 --
 ALTER TABLE `routes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -8,20 +8,23 @@ include 'funcs/db.php';
 define("NO_OF_AIRLINES_PER_PAGE", "200");
 define("NO_OF_AIRPORTS_PER_PAGE", "500");
 define("NO_OF_INV_PER_PAGE", "10");
+define("NO_OF_REPORT_RESULT_PER_PAGE", "3");
 define("NO_OF_CUSTOMER_PER_PAGE", "100");
 
-define("MAIN_TITLE", "Saran Solutions");
+define("MAIN_TITLE_PART1", "Anisch");
+define("MAIN_TITLE_PART2", "Global AG");
+define("MAIN_TITLE", "Anisch Global AG");
 define("MAIN_LOGO_PATH", "images/logo.png");
 #address parameters
-define("MAIN_ADDRESS_1", "Fischermättelistrasse 5");
-define("MAIN_ADDRESS_2", "3008 Bern");
+define("MAIN_ADDRESS_1", "Füllerichstrasse 53");
+define("MAIN_ADDRESS_2", "3073 Gümligen");
 
-define("MAIN_CONTACT_NUMBER_1", "+41 31 557 23 23");
-define("MAIN_CONTACT_NUMBER_2", "+41 79 414 70 67");
+define("MAIN_CONTACT_NUMBER_1", "031 911 58 58");
+define("MAIN_CONTACT_NUMBER_2", "079 298 55 55");
 
 
-define("MAIN_EMAIL", "info@fimmoag.com");
-define("MAIN_WEBSITE_ADDRESS", "www.fimmoag.com");
+define("MAIN_EMAIL", "Anisch@anischag.ch");
+define("MAIN_WEBSITE_ADDRESS", "Anischglobal.ch");
 
 #mail parameters
 define("SEND_MAIL", True);
@@ -70,8 +73,10 @@ function getLinksFavICon(){
 function getCssLinks(){
     return '
 <link href="css/font-awesome.min.css" rel="stylesheet">
+<link href="css/font-awesome.min.css" rel="stylesheet">
 <link href="css/bootstrap.min.css" rel="stylesheet">
 <link href="css/select2.min.css" rel="stylesheet" />
+<link href="css/all.css" rel="stylesheet" />
 
 
 <!--<link href="css/carousel.css" rel="stylesheet">
@@ -122,7 +127,7 @@ function getFooter(){
     return '<!-- FOOTER -->
   <footer class="container">
     <p class="float-right"><a href="#">Back to top</a></p>
-    <p>&copy; Saran Solutions CH. &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
+    <p>&copy; '.MAIN_TITLE .'. &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
   </footer>
 <!-- FOOTER -->';
 }

@@ -60,7 +60,7 @@ function showEditCustomerForm()
 			class="form-control" id="i2" name="last_name" value="<?php echo $row['last_name'];?>">
 	</div>
 	<div class="form-group">
-		<label for="i3">Street,House Number</label> <input type="text"
+		<label for="i3">Street, House Number</label> <input type="text"
 			class="form-control" id="i3" name="street" value="<?php echo $row['address'];?>">
 	</div>
 	<div class="form-group">

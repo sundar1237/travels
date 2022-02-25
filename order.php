@@ -7,6 +7,7 @@ if(isset($_POST['action']) && "pay_invoice" == $_POST['action']) {
 }else if (isset($_POST['action']) && "add_new_invoice" == $_POST['action']) {
     
     include 'funcs/Utils.php';
+    include 'funcs/Parser.php';
     include 'includes/createNewInvoice.php';
 }else if (isset($_GET['action']) && $_GET['action']=="getBalance" ) {
     $id=$_GET['id'];

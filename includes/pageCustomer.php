@@ -9,16 +9,26 @@ $limit = NO_OF_CUSTOMER_PER_PAGE;
 if ($current > 1) {
     $start = ($current * $limit);
 } else {
-    $start = 1;
+    $start = 0;
 }
 
-$rowCounts = getCount("select * from customers");
+$rowCounts = getCount("SELECT * FROM `customers`");
 if ($rowCounts > $limit) {
     $totalpage = round(($rowCounts / $limit)) + 1;
 } else {
     $totalpage = round(($rowCounts / $limit));
 }
-$customers = getFetchArray("select * from customers order by id desc limit " . $start . "," . $limit);
+
+$filter="";
+if(isset($_GET['find_by']) && isset($_GET['find_by_value']) ){
+    $find_by=$_GET['find_by'];
+    $find_by_value=$_GET['find_by_value'];
+    $filter=" where ".$find_by." like '%".$find_by_value."%' ";
+
+}
+
+
+$customers = getFetchArray("SELECT * FROM `customers` ".$filter."order by id desc limit " . $start . "," . $limit);
 echo getHead("Customers", "", "")?>
 	
 	<body>
@@ -35,13 +45,7 @@ echo getHead("Customers", "", "")?>
 						<i class="fa fa-plus"></i> New Customer
 					</button>
 				</div>
-				<div class="col-4">
-					<form class="form-inline my-2 my-lg-0 justify-content-end">
-						<input class="form-control" type="search" placeholder="Search"
-							aria-label="Search">
-						<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-					</form>
-				</div>
+				
 			</div>
 
 			<!-- start pagination -->
@@ -81,11 +85,12 @@ if ($totalpage > $current) {
 					<thead>
 						<tr>
 							<th scope="col">Id</th>
-							<th scope="col">Name</th>
+							<th scope="col">First Name <a href="#" id="fb_first_name"><i class="fa fa-filter"></i></a></th>
+							<th scope="col">Last Name <a href="#" id="fb_last_name"><i class="fa fa-filter"></i></a></th>							
 							<th scope="col">Street</th>
 							<th scope="col">City</th>
 							<th scope="col">Zip</th>
-							<th scope="col">Mobile</th>
+							<th scope="col">Mobile <a href="#" id="fb_mobile"><i class="fa fa-filter"></i></a></th>
 							<th scope="col">#</th>
 
 						</tr>
@@ -93,12 +98,13 @@ if ($totalpage > $current) {
 					<tbody>
 							<?php
     foreach ($customers as $row) {
-
         ?>					 
 							<tr>
 							<td><a href="customers.php?id=<?php echo $row['id']?>"><?php echo $row['id']?></a>
 							</td>
-							<td><a href="customers.php?id=<?php echo $row['id']?>"><?php echo $row['first_name']." ".$row['last_name']?></a>
+							<td><a href="customers.php?id=<?php echo $row['id']?>"><?php echo $row['first_name'] ?></a>
+							</td>
+							<td><a href="customers.php?id=<?php echo $row['id']?>"><?php echo $row['last_name']?></a>
 							</td>
 							<td>
 									<?php echo $row['address']?>
@@ -116,8 +122,7 @@ if ($totalpage > $current) {
 							<td>
 									<?php
 
-echo "<a href='' title='Edit'><i class='fa fa-edit'></i></a>
-                                                <a href='' onclick='return confirm(\"Are you sure?\")' title='Delete'><i class='fa fa-times' style='color:red'></i></a>"?>
+									echo "<a href='' onclick='return confirm(\"Are you sure?\")' title='Delete'><i class='fa fa-times' style='color:red'></i></a>"?>
 								</td>
 						</tr>
 							<?php } ?>								
@@ -181,6 +186,63 @@ echo "<a href='' title='Edit'><i class='fa fa-edit'></i></a>
 				</div>
 			</div>
 		</div>
+		
+		<!-- Modal for filter fb_first_name -->
+		<div class="modal fade" id="modal_fb_first_name" role="dialog">
+			<div class="modal-dialog modal-xs">
+				<div class="modal-content">
+					<form action="customers.php" method="GET" name="modal_fb_first_name">
+						<input type="hidden" name="find_by" value="first_name">
+						<div class="modal-footer">
+							First Name * <input type="text" id="first_name" name="find_by_value" required>
+							<button class="btn btn-secondary" style='' data-dismiss="modal">Close</button>
+							<button class="btn btn-primary" type="submit" id="fb_first_name_submit"
+								style=''>Proceed</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<!-- Modal - show atc response -->
+		
+		<!-- Modal for filter invoices -->
+		<div class="modal fade" id="modal_fb_mobile" role="dialog">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<form action="customers.php" method="GET" name="modal_fb_mobile">
+						<input type="hidden" name="find_by" value="mobile">
+						<div class="modal-footer">
+							Mobile Number * <input type="text" id="mobile" name="find_by_value" required>
+							<button class="btn btn-secondary" style='' data-dismiss="modal">Close</button>
+							<button class="btn btn-primary" type="submit" id="fb_mobile_submit"
+								style=''>Proceed</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<!-- Modal - show atc response -->
+		
+		
+		<!-- Modal for filter fb_last_name -->
+		<div class="modal fade" id="modal_fb_last_name" role="dialog">
+			<div class="modal-dialog modal-xs">
+				<div class="modal-content">
+					<form action="customers.php" method="GET" name="modal_fb_last_name">
+						<input type="hidden" name="find_by" value="last_name">
+						<div class="modal-footer">
+							First Name * <input type="text" id="last_name" name="find_by_value" required>
+							<button class="btn btn-secondary" style='' data-dismiss="modal">Close</button>
+							<button class="btn btn-primary" type="submit" id="fb_last_name_submit"
+								style=''>Proceed</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<!-- Modal - show atc response -->
+		
+		
 
 		<!-- FOOTER -->
 			<?php echo getFooter();?>
@@ -192,6 +254,30 @@ $(document).ready(function() {
     $("[id=new_customer]").click(function () {
     	$("#myModal1").modal("show");
      });
+});
+</script>
+
+<script>
+$(document).ready(function() {
+    $("[id=fb_first_name]").click(function () {
+    	$("#modal_fb_first_name").modal("show");
+    });
+});
+</script>
+
+<script>
+$(document).ready(function() {
+    $("[id=fb_last_name]").click(function () {
+    	$("#modal_fb_last_name").modal("show");
+    });
+});
+</script>
+
+<script>
+$(document).ready(function() {
+    $("[id=fb_mobile]").click(function () {
+    	$("#modal_fb_mobile").modal("show");
+    });
 });
 </script>
 

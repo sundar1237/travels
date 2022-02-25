@@ -2,14 +2,15 @@
 <html lang="en">
 	<?php
 $sabreOutput = $_POST['sabre_output'];
-$allcustomers = getAllCustomersForSelect();
+$booking_date = $_POST['booking_date'];
+$allcustomers = getAllCustomersForSelect("");
 echo getHead("Home", "", "")?>
 	<body>
 		<?php echo getNavigationMenu()?>
 		<main role="main">
 		<div class="fluid-container">
 			
-			<?php $output=parser($sabreOutput);?>
+			<?php $output=parseTicket($sabreOutput,$booking_date);?>
 			<form action="index.php" method="POST" name="confirm_new_invoice"
 				enctype="multipart/form-data">
 
@@ -19,7 +20,7 @@ echo getHead("Home", "", "")?>
 						<div class="form-group">
 							<label for="in1">Booking Date</label> <input type="date"
 								class="form-control" id="in1" name="booking_date"
-								value="<?php echo $output['booking_date']?>">
+								value="<?php echo $output['booking_date_string']?>">
 						</div>
 						<div class="form-group">
 							<label for="in2">Booking Reference</label> <input type="text"
@@ -138,6 +139,7 @@ echo getHead("Home", "", "")?>
 								<table class="table table-sm">
 									<thead>
 										<tr>
+											<th scope="col">S.No</th>
 											<th scope="col">Prefix</th>
 											<th scope="col">First Name</th>
 											<th scope="col">Last Name</th>
@@ -153,9 +155,16 @@ echo getHead("Home", "", "")?>
     							<?php
         $passengers = $output['passengers'];
         $i = 1;
+        $firstName=null;$lastName=null;
         foreach ($passengers as $passenger) {
+            if ($i==1){
+                $firstName=$passenger["first_name"];
+                $lastName=$passenger["last_name"];
+                $allcustomers = getCustomersForSelect($firstName, $lastName);
+            }
             ?>
             <tr>
+            								<td style='width: 2%;'><?php echo $i;?></td>
 											<td style='width: 5%;'><input type="text"
 												class="form-control form-control-sm"
 												name="<?php echo "prefix".$i;?>"
@@ -168,7 +177,7 @@ echo getHead("Home", "", "")?>
 												class="form-control form-control-sm"
 												name="<?php echo "last_name".$i;?>"
 												value="<?php echo $passenger["last_name"]?>"></td>
-											<td style='width: 10%;'><input type="text"
+											<td style='width: 8%;'><input type="text"
 												class="form-control form-control-sm"
 												name="<?php echo "extra".$i;?>"
 												value="<?php echo $passenger["extra"]?>"></td>
@@ -223,8 +232,7 @@ echo getHead("Home", "", "")?>
 								<div class="form-group">
 									<label for="in21" class="h5">Existing Customer</label> 
 									<select
-										class="form-control selectCustomers" name="existing_customer">
-										<option value=""></option>
+										class="form-control selectCustomers" name="existing_customer">										
 										<?php echo $allcustomers;?>
 									</select>
 								</div>
@@ -235,13 +243,13 @@ echo getHead("Home", "", "")?>
 									<label for="inputEmail" class="col-sm-2 col-form-label">First
 										Name</label>
 									<div class="col-sm-3">
-										<input type="text" class="form-control" id="inputEmail" name="first_name">
+										<input type="text" class="form-control" id="inputEmail" name="first_name" value="<?php echo $firstName;?>">
 									</div>
 									<label for="inputPassword" class="col-sm-2 col-form-label">Last
 										Name</label>
 									<div class="col-sm-3">
 										<input type="text" class="form-control" id="inputPassword"
-											name="last_name">
+											name="last_name" value="<?php echo $lastName;?>">
 									</div>
 								</div>
 

@@ -13,12 +13,13 @@ function prepareContent($id)
     $order=getFetchArray("select * from orders where id=".$id);
     $trans = getFetchArray("select * from routes where parent_id = " . $id . " order by id");
     $passengers = getFetchArray("select * from passengers where parent_id = " . $id . " order by id");
+    $customer = getFetchArray("select * from customers where id = " . $order[0]["customer_id"]);
     $html = '
 <html>
 	<head>' . prepareHead() . '
 	</head>
 	<body>';
-    $html .= prepareBody($order, $trans, $id,$passengers);
+    $html .= prepareBody($order, $trans, $id,$passengers, $customer);
     $html .= '</body>
 </html>
 ';
@@ -34,19 +35,19 @@ function printPDFInBrowser($html)
     ob_start();
 
     $mpdf = new \Mpdf\Mpdf([
-        'margin_left' => 20,
-        'margin_right' => 15,
-        'margin_top' => 48,
-        'margin_bottom' => 25,
-        'margin_header' => 10,
-        'margin_footer' => 10
+        'margin_left' => 10,
+        'margin_right' => 10,
+        'margin_top' => 40,
+        'margin_bottom' => 10,
+        'margin_header' => 5,
+        'margin_footer' => 5
     ]);
 
     $mpdf->SetProtection(array(
         'print'
     ));
-    $mpdf->SetTitle("Saran Solutions - Invoice");
-    $mpdf->SetAuthor("Saran Solutions");
+    $mpdf->SetTitle(MAIN_TITLE);
+    $mpdf->SetAuthor(MAIN_TITLE);
     $mpdf->SetWatermarkText("Active");
     $mpdf->showWatermarkText = false;
     $mpdf->watermark_font = 'DejaVuSansCondensed';
@@ -100,7 +101,7 @@ table tr td{
 ';
 }
 
-function prepareBody($tenant, $trans, $id,$passengers)
+function prepareBody($tenant, $trans, $id,$passengers,$customer)
 {
     $html = '
     <!--mpdf
@@ -108,50 +109,54 @@ function prepareBody($tenant, $trans, $id,$passengers)
     <sethtmlpageheader name="myheader" value="on" show-this-page="1" />
     <sethtmlpagefooter name="myfooter" value="on" />
     mpdf-->
-    <div style="text-align: right">Exported on: ' . date("d-m-Y") . '</div>
-    <br>
-    <table width="100%" style="border-collapse: collapse;font-family: sans;" cellpadding="5">
-    <tr>
-    <td colspan="2" style="text-align:left;font-weight:bold;background-color:#f2f2f2">
-    Invoice details
-    </td>
-    </tr>
-    <tr>
-    <td>Booking Date</td>
-    <td>' . $tenant[0]['bdate'] . '</td>
-    </tr>
-    <tr>
-    <td>Booking Reference</td>
-    <td>' . $tenant[0]['reference'] . '</td>
-    </tr>
-    <tr>
-    <td>Airlines</td>
-    <td>' . $tenant[0]['airlines'] . '</td>
-    </tr>
-    <tr>
-    <td>Starting From</td>
-    <td>' . getSingleValue("select concat(country, ' > ',city,' (',code,' )' ) from all_airports where code='".$tenant[0]['origin']."' ") . '</td>
-    </tr>
-    <tr>
-    <td>Final Destination</td>
-    <td>' . getSingleValue("select concat(country, ' > ',city,' (',code,' )' ) from all_airports where code='".$tenant[0]['destination']."' ") . '</td>
-    </tr>
-    <tr>
-    <td>Baggage <small> in Kg</small></td>
-    <td>' . $tenant[0]['baggage'] . '</td>
-    </tr>
-    <tr>
-    <td>Cancel Charge <small> in CHF</small></td>
-    <td>' . $tenant[0]['cancel_charge'] . '</td>
-    </tr>
+    <table style="width:100%;border:none;font-family: sans;" cellpadding="5">
+        <tr>
+            <td style="width:50%;border:none">
+                <table style="width:100%;border-collapse: collapse;font-family: sans;" cellpadding="5">
+                    <tr>
+                        <td colspan="2" style="text-align:left;font-weight:bold;background-color:#f2f2f2">
+                            Invoice details
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Booking Date</td>
+                        <td>' . $tenant[0]['bdate'] . '</td>
+                    </tr>
+                    <tr>
+                        <td>Booking Reference</td>
+                        <td>' . $tenant[0]['reference'] . '</td>
+                    </tr>
+                    <tr>
+                        <td>Airlines</td>
+                        <td>' . $tenant[0]['airlines'] . '</td>
+                    </tr>
+                    -<tr>
+                        <td>Baggage <small> in Kg</small></td>
+                        <td>' . $tenant[0]['baggage'] . '</td>
+                    </tr>
+                    <tr>
+                        <td>Cancel Charge <small> in CHF</small></td>
+                        <td>' . $tenant[0]['cancel_charge'] . '</td>
+                    </tr>
+                </table>
+            </td>
+            <td style="width:50%;border:none;padding-left:10%;padding-top:5%;">
+                <div style="font-style: normal;">
+                    ' . $customer[0]['first_name'] .' '. $customer[0]['last_name'] . ' <br>
+                    ' . $customer[0]['address'] . '<br>
+                    ' . $customer[0]['zip'] .' '. $customer[0]['city'] . '<br>
+                    ' . $customer[0]['mobile'] . '<br>
+                </div>
+            </td>
+        </tr>
     </table>
-    
     
     <br>
     ';
     
     if($trans!=null){
-        $html .= '<p><strong>Flight Details</strong></p><table class="items" width="100%" style="font-size: 9pt; border-collapse: collapse; " cellpadding="8">
+        $html .= '<p><strong>Flight Details</strong></p>
+    <table class="items" width="100%" style="font-size: 9pt;font-weight:bold; border-collapse: collapse; " cellpadding="8">
     <thead>
     <tr>
     <td>Start Date</td>
@@ -249,21 +254,23 @@ function prepareHeaderAndFooter(){
 <htmlpageheader name="myheader">
 	<table width="100%" cellpadding="5">
 		<tr>
-			<td width="100%" style="color:#0000BB;">
-				<span style="font-weight: bold; font-size: 14pt;">Saran Solutions</span>
-				<br />25, Keelaputhur Mainroad<br />Palakkarai<br />Trichy - 620001<br />
-				<span style="font-family:dejavusanscondensed;">&#9742;</span> +91 74 88 444 76<br/>
-				<span style="font-family:dejavusanscondensed;">&#174;</span>www.saransolutions.ch
+			<td width="30%" style="color:#0000BB;border:none">
+				<span style="font-weight: bold; font-size: 14pt;"><font style="color:#e60000;">'.MAIN_TITLE_PART1.'</font> <font style="color:black;">'.MAIN_TITLE_PART2.'</font> </span>
+				<br /><font style="color:#333333;">'.MAIN_ADDRESS_1.'<br />'.MAIN_ADDRESS_2.'</font><br />
+				<font style="color:#333333;"><span style="font-family:dejavusanscondensed;">&#9742;</span> '.MAIN_CONTACT_NUMBER_1.'</font><br/>
+                <font style="color:#333333;"><span style="font-family:dejavusanscondensed;">&#9742;</span> '.MAIN_CONTACT_NUMBER_2.'</font><br/>
+				<font style="color:#333333;">'.MAIN_EMAIL.'</font><br/>
+				<font style="color:#333333;"><span style="font-family:dejavusanscondensed;">&#174;</span>'.MAIN_WEBSITE_ADDRESS.'</font>
+            </td>
+            <td width="70%" style="border:none"><img style="float:right;margin-left:25%;" class="img-fluid" src="images/6.png">
             </td>
 		</tr>
 	</table>
 </htmlpageheader>
 <htmlpagefooter name="myfooter">
-	<div style="border-top: 1px solid #000000; font-size: 9pt; text-align: center; padding-top: 3mm; ">
-    Page {PAGENO} of {nb}
-	</div>
-	<div style=" font-weight:bold;font-size: 7pt; text-align: center; padding-top: 3mm; ">
-    Saran Solutions
-	</div>
+	<div style="border-top: 1px solid #000000; text-align: center; padding-top: 3mm; ">
+        <span><font style="font-size:10pt;color:#e60000;">'.MAIN_TITLE_PART1.'</font> <font style="font-size:9pt;color:black;">'.MAIN_TITLE_PART2.'</font></span> 
+        <span style="font-family:dejavusanscondensed;font-size:8pt">| '.MAIN_ADDRESS_1.' '.MAIN_ADDRESS_2.' |  &#9742; '.MAIN_CONTACT_NUMBER_1.' &#9742; '.MAIN_CONTACT_NUMBER_2.'
+	</div>	
 </htmlpagefooter>';
 }

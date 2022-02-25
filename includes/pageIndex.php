@@ -18,7 +18,49 @@
 	}else{
 	    $totalpage = round (($rowCounts / $limit)) ;
 	}
-	$orders = getFetchArray("select * from orders order by id desc limit ".$start.",".$limit);
+	$order_by="id";
+	if(isset($_GET['by'])){
+	    $order_by=$_GET['by'];
+	}
+	$direction="desc";
+	$d="asc";
+	$arrow="-alt";
+	if(isset($_GET['d']) && "asc" == $_GET['d'] ){
+	    $direction=$_GET['d'];
+	    $d="desc";
+	    
+	    if($order_by=="bdate"){
+	        $arrow="";
+	    }
+	}else{
+	    $direction="desc";
+	    $d="asc";
+	    if($order_by=="bdate"){
+	        $arrow="-alt";
+	    }
+	}
+	$filter="";
+	if(isset($_GET['find_by']) && isset($_GET['find_by_value']) ){
+	    $find_by=$_GET['find_by'];
+	    if ($find_by=="customer"){
+	        $find_by="customer_id";
+	        $find_by_value="";
+	        if($_GET['find_by_value'] != null){
+	            $cid=getSingleValue("select id from customers where first_name = '".$_GET['find_by_value']."'");
+	            if ($cid!=null){
+	                $find_by_value=$cid;
+	            }
+	        }
+	        $filter=" where ".$find_by." = '".$find_by_value."' ";
+	    }else{
+	        $find_by_value=$_GET['find_by_value'];
+	        $filter=" where ".$find_by." like '%".$find_by_value."%' ";
+	    }
+	    
+	}
+	$sql="select * from orders ".$filter." order by ".$order_by." ".$direction." limit ".$start.",".$limit;
+	$orders = getFetchArray($sql);
+	
 	echo getHead("Home", "", "")?>
 	
 	<body>
@@ -27,16 +69,18 @@
 			<div class="container">
 					<p class="h1">Invoices</p>
 					<div class="row">
-    					<div class="col-8">
+						<div class="col-8">
     						 <button 
 							class="btn btn-primary btn-sm" title="Add new Invoice"
 							data-url="index.php?action=new"
 							id="new_invoice" type="button"><i class="fa fa-plus"></i> New Invoice</button> 
+							
 							<!-- <a href="showFormNewInvoice.php" class="btn btn-primary btn-sm btn-action1" title="Add new Invoice">New Invoice</a> -->
 							
 						</div>
+						
     					<div class="col-4">
-    						
+    							
             			</div>
   					</div>
 					
@@ -63,13 +107,17 @@
 					</div>
 					<!-- end pagination -->
 					<div class="table-responsive">
+					
+  					
+  		
+  					
 					<table class="table table-hover">
 						<thead>
 							<tr>
 								<th scope="col">Id</th>
-								<th scope="col">Reference</th>
-								<th scope="col">Date</th>
-								<th scope="col">Customer</th>
+								<th scope="col">Reference <a href="#" id="filter_by_reference"><i class="fa fa-filter"></i></a></th>
+								<th scope="col">Date <a href="index.php?by=bdate&d=<?php echo $d?>"><i class="fa fa-sort-numeric-down<?php echo $arrow;?>"></i></a></th>
+								<th scope="col">Customer <a href="#" id="filter_by_customer"><i class="fa fa-filter"></i></a></th>
 								<th scope="col">Airlines</th>
 								<th scope="col">Origin</th>
 								<th scope="col">Destination</th>								
@@ -82,6 +130,7 @@
 						</thead>
 						<tbody>
 							<?php
+							if($orders!=null){
 							foreach ($orders as $row) {
 							    $cname="";
 							    if($row['customer_id']!=null){$cname = getSingleValue("select first_name from customers where id=".$row['customer_id']);}
@@ -106,7 +155,7 @@
 								</td>
 
 								<td>
-									<a href='customer.php?id=<?php echo $row['customer_id'];?>'>
+									<a target="_blank" href='customers.php?id=<?php echo $row['customer_id'];?>'>
 										<?php echo $cname;?>
 									</a>
 								</td>
@@ -133,7 +182,7 @@
 									<?php if($row['total_balance']==0){echo '<i class="fa fa-check-circle" style="color:green"></i>';}else {echo '<i style="color:red" class="fa fa-times"></i>';}?>
 								</td>							
 								<td>
-                                    <a href='' title='Export to PDF'><i class="fa fa-file"></i></a>
+                                    <a target="_blank" href='export.php?id=<?php echo $row['id']?>' title='Export to PDF'><i class="fa fa-file"></i></a>
                                     <?php if($row['total_balance']>0){?>
                                     	<button style="padding:0px;margin: 0px;" class="btn btn-link" title="Pay" data-url="order.php?action=getBalance&id=<?php echo $row['id']?>" id="pay_invoice" type="button"><i class='fa fa-rocket'></i></button>
                                     <?php }?>
@@ -146,6 +195,7 @@
 							<?php
 							
     }
+}
     
     ?>								
 						</tbody>
@@ -180,6 +230,43 @@
 		</div>
 		<!-- Modal - show atc response -->
 		
+		
+		<!-- Modal for filter invoices -->
+		<div class="modal fade" id="modal_filter_by_reference" role="dialog">
+			<div class="modal-dialog modal-xs">
+				<div class="modal-content">
+					<form action="index.php" method="GET" name="modal_filter_by_reference">
+						<input type="hidden" name="find_by" value="reference">
+						<div class="modal-footer">
+							Reference * <input type="text" id="reference" name="find_by_value" required>
+							<button class="btn btn-secondary" style='' data-dismiss="modal">Close</button>
+							<button class="btn btn-primary" type="submit" id="filter_by_reference_submit"
+								style=''>Proceed</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<!-- Modal - show atc response -->
+		
+		<!-- Modal for filter invoices -->
+		<div class="modal fade" id="modal_filter_by_customer" role="dialog">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<form action="index.php" method="GET" name="modal_filter_by_customer">
+						<input type="hidden" name="find_by" value="customer">
+						<div class="modal-footer">
+							Customer Name * <input type="text" id="customer_name" name="find_by_value" required>
+							<button class="btn btn-secondary" style='' data-dismiss="modal">Close</button>
+							<button class="btn btn-primary" type="submit" id="filter_by_customer_submit"
+								style=''>Proceed</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<!-- Modal - show atc response -->
+		
 		<!-- Modal for new invoice-->
 		<div class="modal fade" id="myModal1" role="dialog">
 			<div class="modal-dialog modal-lg">
@@ -195,16 +282,32 @@
 								type="button">×</button>
 						</div>
 						<div class="modal-body">
-							<div class="row" style='margin: 10px;'>
-							<div class="col-12">								
-        						<div class="form-group">
-        							<label for="in1">Enter Sabre Output</label> 
-        							<textarea rows="10" cols="100" class="form-control" id="in1" name="sabre_output"></textarea>
-        						</div>
+							<div class="row">
+							<?php
+							     $dateTmp = new DateTime();
+						         $today = date_format($dateTmp, 'd M Y');
+						         $today = date('Y-m-d', strtotime($today))
+							?>
+								<div class="form-group">
+								<div class="col-12">
+									<label for="in2">Booking Date</label> <input type="date"
+										class="form-control" id="in2" name="booking_date"
+										value="<?php echo $today;?>">
+								</div>
+								</div>
 							</div>
+							
+							<div class="row">
+    							<div class="col-12">								
+            						<div class="form-group">
+            							<label for="in1">Enter Sabre Output</label> 
+            							<textarea rows="10" cols="100" class="form-control" id="in1" name="sabre_output"></textarea>
+            						</div>
+    							</div>
 							</div>
+							
 							</div>
-						<div class="modal-footer">
+						<div class="modal-footer">							
 							<button class="btn btn-secondary" style='' data-dismiss="modal">Close</button>
 							<button class="btn btn-primary" type="submit" id="add_new_invoice"
 								style=''>Proceed</button>
@@ -235,6 +338,22 @@ $(document).ready(function() {
                 $("#myModal2").modal("show");
             }
         });
+    });
+});
+</script>
+
+<script>
+$(document).ready(function() {
+    $("[id=filter_by_reference]").click(function () {
+    	$("#modal_filter_by_reference").modal("show");
+    });
+});
+</script>
+
+<script>
+$(document).ready(function() {
+    $("[id=filter_by_customer]").click(function () {
+    	$("#modal_filter_by_customer").modal("show");
     });
 });
 </script>

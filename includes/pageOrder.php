@@ -168,11 +168,13 @@ $passengers=getFetchArray("select * from passengers where parent_id=".$order["id
 							<table class="table table-sm table-hover" >
 								<tbody>
 									<tr>
-										<th scope="col" colspan="2" style='background-color: #f2f2f2'>Customer Details</th>
+										<th scope="col" colspan="2" style='background-color: #f2f2f2'>Customer Details
+										<button id="edit_customer" data-url="customers.php?action=edit&id=<?php echo $customer["id"]?>" style="float:right" type="button" class="btn btn-secondary btn-sm">Edit</button>
+										</th>
 									</tr>									
 									<tr>
 										<th scope="col">First Name</th>
-										<td><?php echo $customer["first_name"];?></td>
+										<td><a target="_blank" href="customers.php?id=<?php echo $customer["id"]; ?>"><?php echo $customer["first_name"];?></a></td>
 									</tr>
 									<tr>
 										<th scope="col">Last Name</th>
@@ -256,6 +258,33 @@ $passengers=getFetchArray("select * from passengers where parent_id=".$order["id
 			</div>
 		</div>
 		<!-- Modal - show atc response -->
+		
+		
+		<!-- Modal for edit customer details-->
+		<div class="modal fade" id="myModa21" role="dialog">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<form action="customers.php" method="POST" name="update"
+						enctype="multipart/form-data">
+						<input type="hidden" name="action" value="update">
+						<div class="modal-header" style='border: none;'>
+							<h5 class="modal-title">
+								Update Customer <i class="fa fa-check-square" aria-hidden="true"></i>
+							</h5>
+							<button aria-hidden="true" class="close" data-dismiss="modal"
+								type="button">×</button>
+						</div>
+						<div class="modal-body"></div>
+						<div class="modal-footer">
+							<button class="btn btn-secondary" style='' data-dismiss="modal">Close</button>
+							<button class="btn btn-primary" type="submit" id="update_customer"
+								style=''>Proceed</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<!-- Modal for edit customer details -->
 
 		<?php echo getFooter();?>
 	</main>
@@ -272,6 +301,23 @@ $(document).ready(function() {
             success: function(msg){                
                 $(".modal-body").html(msg);
                 $("#myModal2").modal("show");
+            }
+        });
+    });
+});
+</script>
+
+<script>
+$(document).ready(function() {
+    $("[id=edit_customer]").click(function () {
+        var url = $(this).data("url");
+        $.ajax({
+            dataType: "html",
+            type: "GET",
+            url: url,
+            success: function(msg){                
+                $(".modal-body").html(msg);
+                $("#myModa21").modal("show");
             }
         });
     });

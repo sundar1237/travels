@@ -294,6 +294,7 @@ function parser($content)
                 } else {
                     // print("matched not found");
                 }
+                
                 $pattern = "/FA PAX\s{1,}\w{1,}-\w{1,}/";
                 if(preg_match($pattern,trim($row),$matches)){
                     //print_r($matches);
@@ -390,11 +391,24 @@ function testRegex()
     }
 }
 
-function getAllCustomersForSelect(){
-    $list="";
+function getAllCustomersForSelect($list){
+    $list.="<option value=''></option>";
     $rows=getFetchArray("select * from customers");
-    foreach ($rows as $row){
-        $list.="<option value=".$row["id"].">".$row["first_name"]." ".$row["last_name"]." ".$row["city"]." ".$row["mobile"]."</option>";
+    if($rows!=null && count($rows)>0){
+        foreach ($rows as $row){
+            $list.="<option value=".$row["id"].">".$row["first_name"]." ".$row["last_name"]." ".$row["city"]." ".$row["mobile"]."</option>";
+        }
+    }
+    return $list;
+}
+
+function getCustomersForSelect($first_name,$last_name){
+    $list="";
+    $rows=getFetchArray("select * from customers where first_name='".$first_name."' and last_name='".$last_name."'");
+    if($rows!=null && count($rows)>0){
+        foreach ($rows as $row){
+            $list.="<option value=".$row["id"].">".$row["first_name"]." ".$row["last_name"]." ".$row["city"]." ".$row["mobile"]."</option>";
+        }
     }
     return $list;
 }

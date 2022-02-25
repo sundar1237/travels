@@ -23,12 +23,12 @@ function insertOrder()
         $zip = $_POST['zip'];
         $insertSQL = "INSERT INTO `customers` (`id`, `first_name`, `last_name`, `address`, `city`, `zip`, `mobile`)
         VALUES (NULL, " . cheSNull($first_name) . ", " . cheSNull($last_name) . ", " . cheSNull($address) . ", " . cheSNull($city) . ", " . cheNull($zip) . ", " . cheSNull($mobile) . ")";
-        // echo $insertSQL;
-        // echo "<br>";
+        //echo $insertSQL;
+        //echo "<br>";
         $existing_customer_id = insertSQL($insertSQL);
     }
     $insertSQL = "INSERT INTO `orders`    (`id`, `reference`, `bdate`, `airlines`, `origin`, `destination`, `baggage`, `cancel_charge`, `customer_id`, `ticket_status`, `total_iata_price`, `total_price`, `gain`, `payment_status`, `content`, `trip_type`, `no_of_passengers`) 
-                                VALUES  (NULL, " . cheSNull($reference) . ", " . cheSNull($bdate) . ", " . cheSNull($airwaysName) . ", " . cheSNull($startingFrom) . ", " . cheSNull($finalDestination) . ", " . cheSNull($baggae) . ", " . cheSNull($cancel_charge) . ", " . cheSNull($existing_customer_id) . ", " . cheSNull($ticket_status) . ", NULL, NULL, NULL, 'Unpaid', " . cheSNull($sabre_output) . ", " . cheSNull($tripType) . ", " . cheSNull($total_passengers) . ")";
+                                VALUES  (NULL, " . cheSNull($reference) . ", " . cheSNull($bdate) . ", " . cheSNull($airwaysName) . ", " . cheSNull($startingFrom) . ", " . cheSNull($finalDestination) . ", " . cheSNull($baggae) . ", " . cheSNull($cancel_charge) . ", " . cheNull($existing_customer_id) . ", " . cheSNull($ticket_status) . ", NULL, NULL, NULL, 'Unpaid', " . cheSNull($sabre_output) . ", " . cheSNull($tripType) . ", " . cheSNull($total_passengers) . ")";
     $id = insertSQL($insertSQL);
     // echo $insertSQL;
     // echo "<br>";
